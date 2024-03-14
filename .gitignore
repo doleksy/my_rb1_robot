@@ -2,6 +2,8 @@
 # I am storing my ssh keys here in my local repo so they won't get thrown away when the workspace
 # restarts. This should NEVER be uploaded to GitHub
 .ssh/
+# Ditto for my git setup scripts in misc
+misc/
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,python,ros,ros2,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,python,ros,ros2,cmake

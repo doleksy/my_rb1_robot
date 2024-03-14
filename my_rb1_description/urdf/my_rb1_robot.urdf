@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+
+<robot name="RB1" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Link - base -->
+    <xacro:property name="base_r" value=0.25 />
+    <xacro:property name="base_h" value=0.30 />
+    <xacro:property name="base_m" value=25 />
+    <link name="base_link">
+        <inertial>
+            <mass value="${base_m}" />
+            <origin xyz="0 0 0.3" rpy="0 0 0" />
+            <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
+            <!-- Iz = 1/2 * m * r^2 -->
+            <inertia
+                ixx="${(1/12) * base_m * (3 * base_r * base_r + base_h * base_h)}"
+                ixy="0"
+                ixz="0"
+                iyy="${(1/12) * base_m * (3 * base_r * base_r + base_h * base_h)}"
+                iyz="0"
+                izz="${0.5 * base_m * base_r * base_r}" />
+        </inertial>
+
+        <collision>
+            <geometry>
+                <cylinder length="${base_h}" radius="${base_r}"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <geometry>
+                <cylinder length="${base_h}" radius="${base_r}"/>
+            </geometry>
+            <material name="blue" />
+        </visual>
+    </link>
+
+</robot>

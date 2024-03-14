@@ -25,17 +25,17 @@
     <xacro:property name="base_m" value="20" />
     <link name="base_link">
         <inertial>
-            <mass value="${base_m}" />
             <origin xyz="0 0 0.3" rpy="0 0 0" />
+            <mass value="${base_m}" />
             <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
             <!-- Iz = 1/2 * m * r^2 -->
             <inertia
-                ixx="${(1/12) * base_m * (3 * base_r * base_r + base_h * base_h)}"
+                ixx="${(base_m / 12) * (3 * base_r*base_r + base_h * base_h)}"
                 ixy="0"
                 ixz="0"
-                iyy="${(1/12) * base_m * (3 * base_r * base_r + base_h * base_h)}"
+                iyy="${(base_m / 12) * (3 * base_r * base_r + base_h * base_h)}"
                 iyz="0"
-                izz="${0.5 * base_m * base_r * base_r}" />
+                izz="${(base_m / 2) * base_r * base_r}" />
         </inertial>
 
         <collision>
@@ -75,12 +75,54 @@
             <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
             <!-- Iz = 1/2 * m * r^2 -->
             <inertia
-                ixx="${(1/12) * wheel_m * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
+                ixx="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
                 ixy="0"
                 ixz="0"
-                iyy="${(1/12) * wheel_m * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
+                iyy="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
                 iyz="0"
-                izz="${0.5 * wheel_m * wheel_r * wheel_r}" />
+                izz="${(wheel_m / 2) * wheel_r * wheel_r}" />
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="${PI/2} 0 0" />
+            <geometry>
+                <cylinder length="${wheel_h}" radius="${wheel_r}"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="${PI/2} 0 0" />
+            <geometry>
+                <cylinder length="${wheel_h}" radius="${wheel_r}"/>
+            </geometry>
+            <material name="red" />
+        </visual>
+    </link>
+
+    <!-- Joint - base / right wheel -->
+    <joint name="base_to_right_wheel" type="continuous">
+        <origin rpy="0 0 0" xyz="0 0.2 -0.15" />
+        <parent link="base_link" />
+        <child link="right_wheel" />
+        <axis rpy="0 0 0" xyz="0 1 0" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="1.0" />
+    </joint>
+
+    <!-- Link - right wheel -->
+    <link name="right_wheel">
+        <inertial>
+            <mass value="${wheel_m}" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
+            <!-- Iz = 1/2 * m * r^2 -->
+            <inertia
+                ixx="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
+                ixy="0"
+                ixz="0"
+                iyy="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
+                iyz="0"
+                izz="${(wheel_m / 2) * wheel_r * wheel_r}" />
         </inertial>
 
         <collision>

@@ -33,12 +33,12 @@
     <xacro:property name="base_m" value="20" />
     <link name="base_link">
         <inertial>
-            <origin xyz="0 0 0.3" rpy="0 0 0" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
             <mass value="${base_m}" />
             <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
             <!-- Iz = 1/2 * m * r^2 -->
             <inertia
-                ixx="${(base_m / 12) * (3 * base_r*base_r + base_h * base_h)}"
+                ixx="${(base_m / 12) * (3 * base_r * base_r + base_h * base_h)}"
                 ixy="0"
                 ixz="0"
                 iyy="${(base_m / 12) * (3 * base_r * base_r + base_h * base_h)}"
@@ -60,6 +60,18 @@
         </visual>
     </link>
 
+
+    <!-- Joint - base / base_footprint -->
+    <joint name="base_to_base_footprint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 -${base_h / 2}" />
+        <parent link="base_link" />
+        <child link="base_footprint" />
+    </joint>
+
+    <!-- Link - base_footprint -->
+    <link name="base_footprint" />
+
+
     <!-- Wheel properties -->
     <xacro:property name="wheel_r" value="${0.05 / 2}" />
     <xacro:property name="wheel_h" value="0.025" />
@@ -67,7 +79,7 @@
 
     <!-- Joint - base / left wheel -->
     <joint name="base_to_left_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="0 -0.2 -0.15" />
+        <origin rpy="0 0 0" xyz="0 -0.2 -${base_h / 2}" />
         <parent link="base_link" />
         <child link="left_wheel" />
         <axis rpy="0 0 0" xyz="0 1 0" />
@@ -109,7 +121,7 @@
 
     <!-- Joint - base / right wheel -->
     <joint name="base_to_right_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="0 0.2 -0.15" />
+        <origin rpy="0 0 0" xyz="0 0.2 -${base_h / 2}" />
         <parent link="base_link" />
         <child link="right_wheel" />
         <axis rpy="0 0 0" xyz="0 1 0" />
@@ -155,7 +167,7 @@
 
     <!-- Joint - base / front caster -->
     <joint name="base_to_front_caster" type="fixed">
-        <origin rpy="0 0 0" xyz="0.1 0 -0.15" />
+        <origin rpy="0 0 0" xyz="0.1 0 -${base_h / 2}" />
         <parent link="base_link" />
         <child link="front_caster" />
         <axis rpy="0 0 0" xyz="0 1 0" />
@@ -211,7 +223,7 @@
 
     <!-- Joint - base / back caster -->
     <joint name="base_to_back_caster" type="fixed">
-        <origin rpy="0 0 0" xyz="-0.1 0 -0.15" />
+        <origin rpy="0 0 0" xyz="-0.1 0 -${base_h / 2}" />
         <parent link="base_link" />
         <child link="back_caster" />
         <axis rpy="0 0 0" xyz="0 1 0" />

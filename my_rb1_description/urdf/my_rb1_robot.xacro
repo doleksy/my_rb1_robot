@@ -61,7 +61,7 @@
     </link>
 
     <!-- Wheel properties -->
-    <xacro:property name="wheel_r" value="0.025" />
+    <xacro:property name="wheel_r" value="${0.05 / 2}" />
     <xacro:property name="wheel_h" value="0.025" />
     <xacro:property name="wheel_m" value="1" />
 
@@ -153,7 +153,7 @@
     <xacro:property name="caster_r" value="${0.025 / 2}" />
     <xacro:property name="caster_m" value="1" />
 
-    <!-- Joint - base / left wheel -->
+    <!-- Joint - base / front caster -->
     <joint name="base_to_front_caster" type="fixed">
         <origin rpy="0 0 0" xyz="0.1 0 -0.15" />
         <parent link="base_link" />
@@ -165,6 +165,62 @@
 
     <!-- Link - front caster -->
     <link name="front_caster">
+        <inertial>
+            <mass value="${caster_m}" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <!-- Ix = Iy = Iz = 2/5 * m * r^2 -->
+            <inertia
+                ixx="${(2/5) * caster_m * caster_r * caster_r}"
+                ixy="0"
+                ixz="0"
+                iyy="${(2/5) * caster_m * caster_r * caster_r}"
+                iyz="0"
+                izz="${(2/5) * caster_m * caster_r * caster_r}" />
+        </inertial>
+
+        <!-- Caster wheel support -->
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 ${caster_r/2}" />
+            <geometry>
+                <sphere radius="${caster_r * 2}" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 ${caster_r/2}" />
+            <geometry>
+                <sphere radius="${caster_r * 2}" />
+            </geometry>
+            <material name="DarkBlue" />
+        </visual>
+
+        <!-- Caster wheel -->
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 -${caster_r}" />
+            <geometry>
+                <sphere radius="${caster_r}" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 -${caster_r}" />
+            <geometry>
+                <sphere radius="${caster_r}" />
+            </geometry>
+            <material name="Grey" />
+        </visual>
+    </link>
+
+    <!-- Joint - base / back caster -->
+    <joint name="base_to_back_caster" type="fixed">
+        <origin rpy="0 0 0" xyz="-0.1 0 -0.15" />
+        <parent link="base_link" />
+        <child link="back_caster" />
+        <axis rpy="0 0 0" xyz="0 1 0" />
+        <limit effort="10000" velocity="1000" />
+        <joint_properties damping="1.0" friction="0" />
+    </joint>
+
+    <!-- Link - back caster -->
+    <link name="back_caster">
         <inertial>
             <mass value="${caster_m}" />
             <origin xyz="0 0 0" rpy="0 0 0" />

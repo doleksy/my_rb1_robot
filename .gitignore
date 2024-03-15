@@ -4,6 +4,8 @@
 .ssh/
 # Ditto for my git setup scripts in misc
 misc/
+# And also for my setup script that copies ssh and runs the git config scripts
+my_setup.sh
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,python,ros,ros2,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,python,ros,ros2,cmake

@@ -11,7 +11,7 @@
         <color rgba="0 0 ${204/255} 1"/>
     </material>
 
-    <material name="DarkBlue">
+    <material name="dark_blue">
         <color rgba="${51/255} ${51/255} ${104/255} 1" />
     </material>
 
@@ -19,8 +19,12 @@
         <color rgba="${204/255} 0 0 1"/>
     </material>
 
-    <material name="Grey">
+    <material name="grey">
         <color rgba="${153/255} ${153/255} ${153/255} 1" />
+    </material>
+
+    <material name="dark_grey">
+        <color rgba="${45/255} ${45/255} ${45/255} 1" />
     </material>
 
     <!-- Constants -->
@@ -28,8 +32,6 @@
 
     <!-- Macros -->
     <xacro:macro name="cylinder_inertia" params="m r h">
-        <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
-        <!-- Iz = 1/2 * m * r^2 -->
         <inertia
             ixx="${(m/12) * (3 * r*r + h*h)}" ixy = "0" ixz = "0"
             iyy="${(m/12) * (3 * r*r + h*h)}" iyz = "0"
@@ -38,7 +40,6 @@
     </xacro:macro>
 
     <xacro:macro name="sphere_interia" params="m r">
-        <!-- Ix = Iy = Iz = 2/5 * m * r^2 -->
         <inertia
             ixx="${(2/5) * m * r*r}" ixy="0" ixz="0"
             iyy="${(2/5) * m * r*r}" iyz="0"
@@ -46,11 +47,19 @@
         />
     </xacro:macro>
 
+    <xacro:macro name="box_inertia" params="m x y z">
+        <inertia
+            ixx="${(m/12) * (x*x + z*z)}" ixy="0" ixz="0"
+            iyy="${(m/12) * (y*y + x*x)}" iyz="0"
+            izz="${(m/12) * (y*y + z*z)}"
+        />
+    </xacro:macro>
+
 
     <!-- Link - base -->
     <xacro:property name="base_r" value="0.25" />
     <xacro:property name="base_h" value="0.30" />
-    <xacro:property name="base_m" value="20" />
+    <xacro:property name="base_m" value="20.74" />
     <link name="base_link">
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -191,7 +200,7 @@
             <geometry>
                 <sphere radius="${caster_r * 2}" />
             </geometry>
-            <material name="DarkBlue" />
+            <material name="dark_blue" />
         </visual>
 
         <!-- Caster wheel -->
@@ -206,7 +215,7 @@
             <geometry>
                 <sphere radius="${caster_r}" />
             </geometry>
-            <material name="Grey" />
+            <material name="grey" />
         </visual>
     </link>
 
@@ -240,7 +249,7 @@
             <geometry>
                 <sphere radius="${caster_r * 2}" />
             </geometry>
-            <material name="DarkBlue" />
+            <material name="dark_blue" />
         </visual>
 
         <!-- Caster wheel -->
@@ -255,7 +264,46 @@
             <geometry>
                 <sphere radius="${caster_r}" />
             </geometry>
-            <material name="Grey" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <!-- Laser properties -->
+    <xacro:property name="laser_x" value="${75.0 / 1000}" />
+    <xacro:property name="laser_y" value="${60.0 / 1000}" />
+    <xacro:property name="laser_z" value="${60.0 / 1000}" />
+    <xacro:property name="laser_m" value="${260.0 / 1000}" />
+
+    <!-- Joint - base / front laser -->
+    <joint name="base_to_front_laser" type="fixed">
+        <!-- rotate the laser by 180 degrees -->
+        <origin rpy="${PI} 0 0" xyz="${base_r} 0 ${base_h / 4}" />
+        <parent link="base_link" />
+        <child link="front_laser" />
+    </joint>
+
+    <!-- Link - front laser -->
+    <!-- Modeled after a Hokuyo UBG-04LX-F01 -->
+    <link name="front_laser">
+        <inertial>
+            <mass value="${laser_m}" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <xacro:box_inertia m="${laser_m}" x="${laser_x}" y="${laser_y}" z="${laser_z}" />
+        </inertial>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="${laser_x} ${laser_y}  ${laser_z}" />
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="${laser_x} ${laser_y}  ${laser_z}" />
+            </geometry>
+            <material name="dark_grey" />
         </visual>
     </link>
 

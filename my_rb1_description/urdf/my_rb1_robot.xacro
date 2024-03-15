@@ -26,6 +26,26 @@
     <!-- Constants -->
     <xacro:property name="PI" value="3.1415926535897931"/>
 
+    <!-- Macros -->
+    <xacro:macro name="cylinder_inertia" params="m r h">
+        <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
+        <!-- Iz = 1/2 * m * r^2 -->
+        <inertia
+            ixx="${(m/12) * (3 * r*r + h*h)}" ixy = "0" ixz = "0"
+            iyy="${(m/12) * (3 * r*r + h*h)}" iyz = "0"
+            izz="${(m/2) * r*r}"
+        /> 
+    </xacro:macro>
+
+    <xacro:macro name="sphere_interia" params="m r">
+        <!-- Ix = Iy = Iz = 2/5 * m * r^2 -->
+        <inertia
+            ixx="${(2/5) * m * r*r}" ixy="0" ixz="0"
+            iyy="${(2/5) * m * r*r}" iyz="0"
+            izz="${(2/5) * m * r*r}"
+        />
+    </xacro:macro>
+
 
     <!-- Link - base -->
     <xacro:property name="base_r" value="0.25" />
@@ -35,15 +55,7 @@
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <mass value="${base_m}" />
-            <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
-            <!-- Iz = 1/2 * m * r^2 -->
-            <inertia
-                ixx="${(base_m / 12) * (3 * base_r * base_r + base_h * base_h)}"
-                ixy="0"
-                ixz="0"
-                iyy="${(base_m / 12) * (3 * base_r * base_r + base_h * base_h)}"
-                iyz="0"
-                izz="${(base_m / 2) * base_r * base_r}" />
+            <xacro:cylinder_inertia m="${base_m}" r="${base_r}" h="${base_h}" />
         </inertial>
 
         <collision>
@@ -92,15 +104,7 @@
         <inertial>
             <mass value="${wheel_m}" />
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
-            <!-- Iz = 1/2 * m * r^2 -->
-            <inertia
-                ixx="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
-                ixy="0"
-                ixz="0"
-                iyy="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
-                iyz="0"
-                izz="${(wheel_m / 2) * wheel_r * wheel_r}" />
+            <xacro:cylinder_inertia m="${wheel_m}" r="${wheel_r}" h="${wheel_h}" />
         </inertial>
 
         <collision>
@@ -134,15 +138,7 @@
         <inertial>
             <mass value="${wheel_m}" />
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <!-- Ix = Iy = 1/12 * m * (3r^2 + h^2) -->
-            <!-- Iz = 1/2 * m * r^2 -->
-            <inertia
-                ixx="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
-                ixy="0"
-                ixz="0"
-                iyy="${(wheel_m / 12) * (3 * wheel_r * wheel_r + wheel_h * wheel_h)}"
-                iyz="0"
-                izz="${(wheel_m / 2) * wheel_r * wheel_r}" />
+            <xacro:cylinder_inertia m="${wheel_m}" r="${wheel_r}" h="${wheel_h}" />
         </inertial>
 
         <collision>
@@ -180,14 +176,7 @@
         <inertial>
             <mass value="${caster_m}" />
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <!-- Ix = Iy = Iz = 2/5 * m * r^2 -->
-            <inertia
-                ixx="${(2/5) * caster_m * caster_r * caster_r}"
-                ixy="0"
-                ixz="0"
-                iyy="${(2/5) * caster_m * caster_r * caster_r}"
-                iyz="0"
-                izz="${(2/5) * caster_m * caster_r * caster_r}" />
+            <xacro:sphere_interia m="${caster_m}" r="${caster_r}" />
         </inertial>
 
         <!-- Caster wheel support -->
@@ -236,14 +225,7 @@
         <inertial>
             <mass value="${caster_m}" />
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <!-- Ix = Iy = Iz = 2/5 * m * r^2 -->
-            <inertia
-                ixx="${(2/5) * caster_m * caster_r * caster_r}"
-                ixy="0"
-                ixz="0"
-                iyy="${(2/5) * caster_m * caster_r * caster_r}"
-                iyz="0"
-                izz="${(2/5) * caster_m * caster_r * caster_r}" />
+            <xacro:sphere_interia m="${caster_m}" r="${caster_r}" />
         </inertial>
 
         <!-- Caster wheel support -->

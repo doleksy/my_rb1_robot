@@ -59,7 +59,7 @@
     <!-- Link - base -->
     <xacro:property name="base_r" value="0.25" />
     <xacro:property name="base_h" value="0.30" />
-    <xacro:property name="base_m" value="20.74" />
+    <xacro:property name="base_m" value="17.74" />
     <link name="base_link">
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -98,7 +98,7 @@
 
     <xacro:property name="wheel_r" value="${0.05 / 2}" />
     <xacro:property name="wheel_h" value="0.03" />
-    <xacro:property name="wheel_m" value="1" />
+    <xacro:property name="wheel_m" value="2" />
 
     <!-- Joint - base / left wheel -->
     <joint name="base_to_left_wheel" type="continuous">
@@ -170,7 +170,7 @@
 
     <!-- Caster properties -->
     <xacro:property name="caster_r" value="${0.025 / 2}" />
-    <xacro:property name="caster_m" value="1" />
+    <xacro:property name="caster_m" value="1.5" />
 
     <!-- Joint - base / front caster -->
     <joint name="base_to_front_caster" type="fixed">
@@ -186,7 +186,7 @@
     <link name="front_caster">
         <inertial>
             <mass value="${caster_m}" />
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="0 0 -${caster_r}" rpy="0 0 0" />
             <xacro:sphere_interia m="${caster_m}" r="${caster_r}" />
         </inertial>
 
@@ -235,7 +235,7 @@
     <link name="back_caster">
         <inertial>
             <mass value="${caster_m}" />
-            <origin xyz="0 0 0" rpy="0 0 0" />
+            <origin xyz="0 0 -${caster_r}" rpy="0 0 0" />
             <xacro:sphere_interia m="${caster_m}" r="${caster_r}" />
         </inertial>
 
@@ -315,24 +315,29 @@
         <material>Gazebo/Black</material>
     </gazebo>
 
-    <gazebo reference="base_to_left_wheel">
+    <gazebo reference="left_wheel">
         <mu1>1</mu1>
         <mu2>1</mu2>
     </gazebo>
-    <gazebo reference="base_to_right_wheel">
+    <gazebo reference="right_wheel">
         <mu1>1</mu1>
         <mu2>1</mu2>
     </gazebo>
 
-    <gazebo reference="base_to_front_caster">
-        <preserveFixedJoint>true</preserveFixedJoint>
+    <gazebo reference="front_caster">
         <mu1>0</mu1>
         <mu2>0</mu2>
     </gazebo>
-    <gazebo reference="base_to_back_caster">
-        <preserveFixedJoint>true</preserveFixedJoint>
+    <gazebo reference="back_caster">
         <mu1>0</mu1>
         <mu2>0</mu2>
+    </gazebo>
+
+    <gazebo reference="base_to_front_caster">
+        <preserveFixedJoint>true</preserveFixedJoint>
+    </gazebo>
+    <gazebo reference="base_to_back_caster">
+        <preserveFixedJoint>true</preserveFixedJoint>
     </gazebo>
 
     <gazebo reference="base_to_front_laser">
@@ -358,7 +363,7 @@
     <gazebo reference="front_laser">
         <sensor type="ray" name="head_hokuyo_sensor">
             <pose>0 0 0 0 0 0</pose>
-            <visualize>true</visualize>
+            <visualize>false</visualize>
             <update_rate>20</update_rate>
             <ray>
                 <scan>

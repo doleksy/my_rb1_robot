@@ -97,7 +97,7 @@
     <xacro:property name="base_to_wheel_offset_y" value="0.2" />
 
     <xacro:property name="wheel_r" value="${0.05 / 2}" />
-    <xacro:property name="wheel_h" value="0.025" />
+    <xacro:property name="wheel_h" value="0.03" />
     <xacro:property name="wheel_m" value="1" />
 
     <!-- Joint - base / left wheel -->
@@ -310,7 +310,7 @@
     </link>
 
 
-    <!-- Gazebo -->
+    <!-- Gazebo tags -->
     <gazebo reference="base_link">
         <material>Gazebo/Black</material>
     </gazebo>
@@ -335,6 +335,10 @@
         <mu2>0</mu2>
     </gazebo>
 
+    <gazebo reference="base_to_front_laser">
+        <preserveFixedJoint>true</preserveFixedJoint>
+    </gazebo>
+
     <gazebo>
         <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
             <alwaysOn>true</alwaysOn>
@@ -349,6 +353,38 @@
             <odometryFrame>odom</odometryFrame>
             <robotBaseFrame>base_link</robotBaseFrame>
         </plugin>
+    </gazebo>
+
+    <gazebo reference="front_laser">
+        <sensor type="ray" name="head_hokuyo_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>false</visualize>
+            <update_rate>20</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.20</min>
+                    <max>10.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+                <topicName>/scan</topicName>
+                <frameName>sensor_laser</frameName>
+            </plugin>
+        </sensor>
     </gazebo>
 
 </robot>

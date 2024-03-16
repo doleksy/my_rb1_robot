@@ -6,11 +6,6 @@
     <xacro:include filename="$(find robot_description)/urdf/robot.gazebo" />
     -->
 
-    <!-- Gazebo -->
-    <gazebo reference="base_link">
-        <material>Gazebo/Black</material>
-    </gazebo>
-
     <!-- Materials -->
     <material name="blue">
         <color rgba="0 0 ${204/255} 1"/>
@@ -99,13 +94,15 @@
 
 
     <!-- Wheel properties -->
+    <xacro:property name="base_to_wheel_offset_y" value="0.2" />
+
     <xacro:property name="wheel_r" value="${0.05 / 2}" />
     <xacro:property name="wheel_h" value="0.025" />
     <xacro:property name="wheel_m" value="1" />
 
     <!-- Joint - base / left wheel -->
     <joint name="base_to_left_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="0 -0.2 -${base_h / 2}" />
+        <origin rpy="0 0 0" xyz="0 ${base_to_wheel_offset_y} -${base_h / 2}" />
         <parent link="base_link" />
         <child link="left_wheel" />
         <axis rpy="0 0 0" xyz="0 1 0" />
@@ -139,7 +136,7 @@
 
     <!-- Joint - base / right wheel -->
     <joint name="base_to_right_wheel" type="continuous">
-        <origin rpy="0 0 0" xyz="0 0.2 -${base_h / 2}" />
+        <origin rpy="0 0 0" xyz="0 -${base_to_wheel_offset_y} -${base_h / 2}" />
         <parent link="base_link" />
         <child link="right_wheel" />
         <axis rpy="0 0 0" xyz="0 1 0" />
@@ -311,5 +308,47 @@
             <material name="dark_grey" />
         </visual>
     </link>
+
+
+    <!-- Gazebo -->
+    <gazebo reference="base_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="base_to_left_wheel">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+    </gazebo>
+    <gazebo reference="base_to_right_wheel">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+    </gazebo>
+
+    <gazebo reference="base_to_front_caster">
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <mu1>0</mu1>
+        <mu2>0</mu2>
+    </gazebo>
+    <gazebo reference="base_to_back_caster">
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <mu1>0</mu1>
+        <mu2>0</mu2>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>20</updateRate>
+            <leftJoint>base_to_left_wheel</leftJoint>
+            <rightJoint>base_to_right_wheel</rightJoint>
+            <wheelSeparation>${base_to_wheel_offset_y * 2}</wheelSeparation>
+            <wheelDiameter>${wheel_r * 2}</wheelDiameter>
+            <torque>10</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+        </plugin>
+    </gazebo>
 
 </robot>

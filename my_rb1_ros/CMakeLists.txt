@@ -10,6 +10,7 @@ project(my_rb1_ros)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   message_generation
+  angles
 )
 
 ## System dependencies are found with CMake's conventions

@@ -154,6 +154,13 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+add_executable(rotate_service src/rotate_service.cpp)
+add_dependencies(rotate_service ${rotate_service_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(rotate_service my_rb1_ros_generate_messages_cpp)
+target_link_libraries(rotate_service
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############

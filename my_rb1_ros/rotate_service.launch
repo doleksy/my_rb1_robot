@@ -1,0 +1,8 @@
+<launch>
+
+    <node pkg="my_rb1_ros"
+          type="rotate_service"
+          name="rb1_rot8_srv"
+          output="screen" />
+
+</launch>

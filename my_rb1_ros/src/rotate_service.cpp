@@ -4,6 +4,7 @@
 #include <angles/angles.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <cmath>
+#include <sstream>
 
 #include "my_rb1_ros/Rotate.h"
 
@@ -78,7 +79,9 @@ private:
 
         ROS_INFO("Service Completed");
 
-        res.result = "Rotation Successful";
+        std::ostringstream resultBuffer;
+        resultBuffer << "Service /rotate_robot: Success: " << req.degrees << " degrees.";
+        res.result = resultBuffer.str().c_str();
         return true;
     }
 
